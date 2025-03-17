@@ -190,7 +190,7 @@
 
 
 
-#3rd Working Code(Array of Articles)
+
 import json
 import time
 from selenium import webdriver
@@ -202,11 +202,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pymongo import MongoClient
 
 # MongoDB connection setup
-client = MongoClient("mongodb://localhost:27017/")  # Change URL if needed
+client = MongoClient("mongodb://localhost:27017/")  
 db = client["news_scraper"]
 collection = db["articles"]
 
-# Websites and categories to scrape
+
 websites = [
     {"url": "https://www.bbc.com/news", "category": "News"},
     {"url": "https://www.bbc.com/innovation", "category": "Innovation"},
@@ -251,25 +251,25 @@ for site in websites:
     category_label = site["category"]
 
     driver.get(category_url)
-    print(f"🔍 Scraper started for {category_label}...")
+    # print(f"🔍 Scraper started for {category_label}...")
 
     # Wait for the page to load and find all article links
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="internal-link"]')))
     articles = driver.find_elements(By.CSS_SELECTOR, '[data-testid="internal-link"]')
 
-    article_links = set()  # Use a set to avoid duplicates
+    article_links = set()  
     for article in articles:
         link = article.get_attribute("href")
         if link and "/news/" in link:  # Filter only news articles
             full_link = link if link.startswith("http") else "https://www.bbc.com" + link
             article_links.add(full_link)
 
-    print(f"Total articles found in {category_label}: {len(article_links)}")
+    # print(f"Total articles found in {category_label}: {len(article_links)}")
 
     # Iterate through each article link
     for index, article_url in enumerate(article_links, start=1):
         try:
-            print(f"Scraping Article {index}: {article_url}")
+            # print(f"Scraping Article {index}: {article_url}")
             driver.get(article_url)
 
             # Wait for the article to load
@@ -291,9 +291,9 @@ for site in websites:
             collection.insert_one(article_data)
 
         except Exception as e:
-            print(f"❌ Error scraping {article_url}: {e}")
+            # print(f"❌ Error scraping {article_url}: {e}")
 
 # Close the browser
-driver.quit()
-print("✅ Scraping completed. Data stored in MongoDB.")
+         driver.quit()
+# print("✅ Scraping completed. Data stored in MongoDB.")
 
